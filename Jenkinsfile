@@ -48,6 +48,7 @@ pipeline {
             steps {
                 script {
                     try {
+                        sh 'npm list eslint || npm install eslint'
                         sh 'npx eslint .' 
                         LINTER_RESULT = 'SUCCESS'
                     } catch (Exception e) {
