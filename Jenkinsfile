@@ -48,7 +48,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'npx eslint . --fix' 
+                        sh 'npx eslint .' 
                         LINTER_RESULT = 'SUCCESS'
                     } catch (Exception e) {
                         LINTER_RESULT = 'FAILURE'
