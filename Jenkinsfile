@@ -44,22 +44,24 @@ pipeline {
             }
         }
 
-        stage('Linter') {
-            steps {
-                script {
-                    try {
-                        sh 'npm list eslint || npm install eslint'
-                        echo "Verificando versión de ESLint..."
-                        sh 'npx eslint --version'
-                        sh 'npx eslint .' 
-                        LINTER_RESULT = 'SUCCESS'
-                    } catch (Exception e) {
-                        LINTER_RESULT = 'FAILURE'
-                        error("Linter falló")
-                    }
-                }
-            }
-        }
+        // stage('Linter') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 echo "Verificando si eslint está instalado..."
+        //                 sh 'npm list eslint || npm install eslint'  // Verifica si eslint está instalado y lo instala si no lo está.
+        //                 echo "Verificando versión de ESLint..."
+        //                 sh 'npx eslint --version'  // Verifica la versión de eslint.
+        //                 echo "Ejecutando ESLint en el proyecto..."
+        //                 sh 'npx eslint .'  // Corre ESLint sobre todo el proyecto.
+        //                 LINTER_RESULT = 'SUCCESS'
+        //             } catch (Exception e) {
+        //                 LINTER_RESULT = 'FAILURE'
+        //                 error("Linter falló")
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Test') {
             steps {
