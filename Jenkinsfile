@@ -49,6 +49,8 @@ pipeline {
                 script {
                     try {
                         sh 'npm list eslint || npm install eslint'
+                        echo "Verificando versión de ESLint..."
+                        sh 'npx eslint --version'
                         sh 'npx eslint .' 
                         LINTER_RESULT = 'SUCCESS'
                     } catch (Exception e) {
