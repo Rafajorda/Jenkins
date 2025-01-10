@@ -9,6 +9,20 @@ pipeline {
     }
 
     stages {
+
+        stage('Dependencias') {
+            steps {
+                script {
+                    echo "Instalando dependencias..."
+                    bat 'npm install'
+                    echo "Instalando CLI de Vercel..."
+                    bat 'npm install -g vercel'
+                    echo "Verificando la instalación de la CLI de Vercel..."
+                    bat 'vercel --version'
+                }
+            }
+        }
+
         stage('Solicitud de datos') {
             steps {
                 script {
@@ -22,6 +36,7 @@ pipeline {
                         string(defaultValue: '', description: 'ChatID de Telegram', name: 'chatId')
                     ])
                     
+                
                     env.EJECUTOR = ejecutor
                     env.MOTIVO = motivo
                     env.CHAT_ID = chatId
