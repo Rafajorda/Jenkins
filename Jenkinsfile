@@ -17,8 +17,8 @@ pipeline {
                     bat 'npm install'
                     echo "Instalando CLI de Vercel..."
                     bat 'npm install -g vercel'
-                    echo "Verificando la instalación de la CLI de Vercel..."
-                    bat 'vercel --version'
+                    // echo "Verificando la instalación de la CLI de Vercel..."
+                    // bat 'vercel --version'
                 }
             }
         }
