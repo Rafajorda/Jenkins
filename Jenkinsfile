@@ -12,11 +12,18 @@ pipeline {
         stage('Solicitud de datos') {
             steps {
                 script {
-                   input message: '¿Quién ejecuta esta pipeline?', parameters: [string(defaultValue: 'defaultEjecutor', description: 'Ejecutor del job')]
-                    def motivo = input(message: 'Motivo de la ejecución:', parameters: [string(defaultValue: '', description: 'Motivo de la ejecución')])
-                    def chatId = input(message: 'Indica el ChatID de Telegram para las notificaciones:', parameters: [string(defaultValue: '', description: 'ChatID de Telegram')])
+                    def ejecutor = input message: '¿Quién ejecuta esta pipeline?', parameters: [
+                        string(defaultValue: 'defaultEjecutor', description: 'Ejecutor del job', name: 'ejecutor')
+                    ]
+                    def motivo = input(message: 'Motivo de la ejecución:', parameters: [
+                        string(defaultValue: '', description: 'Motivo de la ejecución', name: 'motivo')
+                    ])
+                    def chatId = input(message: 'Indica el ChatID de Telegram para las notificaciones:', parameters: [
+                        string(defaultValue: '', description: 'ChatID de Telegram', name: 'chatId')
+                    ])
+                    
                     env.EJECUTOR = ejecutor
-                    env.MOTIVO = motiVO
+                    env.MOTIVO = motivo
                     env.CHAT_ID = chatId
                 }
             }
