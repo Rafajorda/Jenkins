@@ -48,12 +48,19 @@ pipeline {
             steps {
                 script {
                     try {
-                        echo "Verificando si eslint está instalado..."
-                        sh 'npm list eslint || npm install eslint'  // Verifica si eslint está instalado y lo instala si no lo está.
+                        bat 'npm -v'  // Verifica la versión de npm.
+                        echo "Verificando instalación de node..."
+                        bat 'node -v'  // Verifica la versión de Node.js.
+                        echo "Verificando npx..."
+                        bat 'npx --version'  // Verifica que npx esté disponible.
                         echo "Verificando versión de ESLint..."
-                        sh 'npx eslint --version'  // Verifica la versión de eslint.
+                        bat 'npx eslint --version'  // Verifica la versión de eslint.
+                        echo "Verificando si eslint está instalado..."
+                        bat 'npm list eslint || npm install eslint'  // Verifica si eslint está instalado y lo instala si no lo está.
+                        echo "Verificando versión de ESLint..."
+                        bat 'npx eslint --version'  
                         echo "Ejecutando ESLint en el proyecto..."
-                        sh 'npx eslint .'  // Corre ESLint sobre todo el proyecto.
+                        bat 'npx eslint .'
                         LINTER_RESULT = 'SUCCESS'
                     } catch (Exception e) {
                         LINTER_RESULT = 'FAILURE'
@@ -67,7 +74,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'npm test -- --coverage' 
+                        bat 'npm test -- --coverage' 
                         TEST_RESULT = 'SUCCESS'
                     } catch (Exception e) {
                         TEST_RESULT = 'FAILURE'
