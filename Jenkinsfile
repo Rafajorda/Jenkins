@@ -89,7 +89,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            sh 'npm run build'
+                            bat 'npm run build'
                         } catch (Exception e) {
                             error("El build falló")
                         }
@@ -103,7 +103,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            sh 'bash jenkinsScripts/update_readme.sh'
+                            bat 'bash jenkinsScripts/update_readme.sh'
                             UPDATE_README_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             UPDATE_README_RESULT = 'FAILURE'
@@ -119,7 +119,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            sh 'bash jenkinsScripts/push_changes.sh'
+                            bat 'bash jenkinsScripts/push_changes.sh'
                         } catch (Exception e) {
                             error("El push falló")
                         }
@@ -133,7 +133,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            sh 'bash jenkinsScripts/deploy_to_vercel.sh'
+                            bat 'bash jenkinsScripts/deploy_to_vercel.sh'
                             DEPLOY_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             DEPLOY_RESULT = 'FAILURE'
@@ -149,7 +149,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            sh """
+                            bat """
                             curl -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
                                 -d chat_id=${env.CHAT_ID} \
                                 -d text="Se ha ejecutado la pipeline de Jenkins con los siguientes resultados:\n
