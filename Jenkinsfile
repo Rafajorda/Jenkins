@@ -136,9 +136,15 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            bat 'npm install -g vercel'
-                            bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/deploy_to_vercel.sh'
+                            echo "Verificando versión de Node.js en Jenkins..."
+                            bat 'node -v'
+
+                            echo "Verificando versión de npm en Jenkins..."
+                            bat 'npm -v'
+
+                            echo "Verificando versión de Vercel en Jenkins..."
                             bat 'vercel --version'
+                            bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/deploy_to_vercel.sh'
                             DEPLOY_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             DEPLOY_RESULT = 'FAILURE'
@@ -154,6 +160,9 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
+                            echo "Enviando mensaje a Telegram..."
+                            echo ${env.CHAT_ID} "ID"
+                            echo ${TELEGRAM_BOT_TOKEN} "BOT TOKEN"
                             bat """
                             curl -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage ^
                                 -d chat_id=${env.CHAT_ID} ^
