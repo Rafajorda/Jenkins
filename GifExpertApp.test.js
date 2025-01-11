@@ -1,9 +1,29 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { GifExpertApp } from './src/GifExpertApp';
+import fetch from 'node-fetch';
 
+// Mock de fetch
 jest.mock('node-fetch', () => jest.fn());
+
 describe('GifExpertApp Component', () => {
+  beforeEach(() => {
+    // Configurar el mock de fetch
+    fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue({
+        data: [
+          {
+            id: 'abc123',
+            title: 'Test Gif',
+            images: {
+              downsized_medium: { url: 'https://test.com/test.gif' },
+            },
+          },
+        ],
+      }),
+    });
+  });
+
   test('should render the GifExpertApp title', () => {
     render(<GifExpertApp />);
     expect(screen.getByText('GifExpertApp')).toBeInTheDocument();
