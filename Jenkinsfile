@@ -9,7 +9,6 @@ pipeline {
     }
 
     stages {
-
         stage('Dependencias') {
             steps {
                 script {
@@ -17,8 +16,6 @@ pipeline {
                     bat 'npm install'
                     echo "Instalando CLI de Vercel..."
                     bat 'npm install -g vercel'
-                    // echo "Verificando la instalación de la CLI de Vercel..."
-                    // bat 'vercel --version'
                 }
             }
         }
@@ -36,7 +33,6 @@ pipeline {
                         string(defaultValue: '', description: 'ChatID de Telegram', name: 'chatId')
                     ])
                     
-                
                     env.EJECUTOR = ejecutor
                     env.MOTIVO = motivo
                     env.CHAT_ID = chatId
@@ -47,24 +43,26 @@ pipeline {
         stage('Linter') {
             steps {
                 script {
-                    try {
-                        bat 'npm -v'  // Verifica la versión de npm.
-                        echo "Verificando instalación de node..."
-                        bat 'node -v'  // Verifica la versión de Node.js.
-                        echo "Verificando npx..."
-                        bat 'npx --version'  // Verifica que npx esté disponible.
-                        echo "Verificando versión de ESLint..."
-                        bat 'npx eslint --version'  // Verifica la versión de eslint.
-                        echo "Verificando si eslint está instalado..."
-                        bat 'npm list eslint || npm install eslint'  // Verifica si eslint está instalado y lo instala si no lo está.
-                        echo "Verificando versión de ESLint..."
-                        bat 'npx eslint --version'  
-                        echo "Ejecutando ESLint en el proyecto..."
-                        bat 'npx eslint .'
-                        LINTER_RESULT = 'SUCCESS'
-                    } catch (Exception e) {
-                        LINTER_RESULT = 'FAILURE'
-                        error("Linter falló")
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        try {
+                            bat 'npm -v'
+                            echo "Verificando instalación de node..."
+                            bat 'node -v'
+                            echo "Verificando npx..."
+                            bat 'npx --version'
+                            echo "Verificando versión de ESLint..."
+                            bat 'npx eslint --version'
+                            echo "Verificando si eslint está instalado..."
+                            bat 'npm list eslint || npm install eslint'
+                            echo "Verificando versión de ESLint..."
+                            bat 'npx eslint --version'
+                            echo "Ejecutando ESLint en el proyecto..."
+                            bat 'npx eslint .'
+                            LINTER_RESULT = 'SUCCESS'
+                        } catch (Exception e) {
+                            LINTER_RESULT = 'FAILURE'
+                            error("Linter falló")
+                        }
                     }
                 }
             }
@@ -73,12 +71,14 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    try {
-                        bat 'npm test -- --coverage' 
-                        TEST_RESULT = 'SUCCESS'
-                    } catch (Exception e) {
-                        TEST_RESULT = 'FAILURE'
-                        error("Las pruebas fallaron")
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        try {
+                            bat 'npm test -- --coverage'
+                            TEST_RESULT = 'SUCCESS'
+                        } catch (Exception e) {
+                            TEST_RESULT = 'FAILURE'
+                            error("Las pruebas fallaron")
+                        }
                     }
                 }
             }
@@ -87,10 +87,12 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    try {
-                        sh 'npm run build' 
-                    } catch (Exception e) {
-                        error("El build falló")
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        try {
+                            sh 'npm run build'
+                        } catch (Exception e) {
+                            error("El build falló")
+                        }
                     }
                 }
             }
@@ -99,12 +101,14 @@ pipeline {
         stage('Actualizar Readme') {
             steps {
                 script {
-                    try {
-                        sh 'bash jenkinsScripts/update_readme.sh' 
-                        UPDATE_README_RESULT = 'SUCCESS'
-                    } catch (Exception e) {
-                        UPDATE_README_RESULT = 'FAILURE'
-                        error("Falló la actualización del README")
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        try {
+                            sh 'bash jenkinsScripts/update_readme.sh'
+                            UPDATE_README_RESULT = 'SUCCESS'
+                        } catch (Exception e) {
+                            UPDATE_README_RESULT = 'FAILURE'
+                            error("Falló la actualización del README")
+                        }
                     }
                 }
             }
@@ -113,10 +117,12 @@ pipeline {
         stage('Push de cambios') {
             steps {
                 script {
-                    try {
-                        sh 'bash jenkinsScripts/push_changes.sh' 
-                    } catch (Exception e) {
-                        error("El push falló")
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        try {
+                            sh 'bash jenkinsScripts/push_changes.sh'
+                        } catch (Exception e) {
+                            error("El push falló")
+                        }
                     }
                 }
             }
@@ -125,12 +131,14 @@ pipeline {
         stage('Deploy a Vercel') {
             steps {
                 script {
-                    try {
-                        sh 'bash jenkinsScripts/deploy_to_vercel.sh' 
-                        DEPLOY_RESULT = 'SUCCESS'
-                    } catch (Exception e) {
-                        DEPLOY_RESULT = 'FAILURE'
-                        error("El deploy a Vercel falló")
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        try {
+                            sh 'bash jenkinsScripts/deploy_to_vercel.sh'
+                            DEPLOY_RESULT = 'SUCCESS'
+                        } catch (Exception e) {
+                            DEPLOY_RESULT = 'FAILURE'
+                            error("El deploy a Vercel falló")
+                        }
                     }
                 }
             }
@@ -139,19 +147,21 @@ pipeline {
         stage('Notificación') {
             steps {
                 script {
-                    try {
-                        sh """
-                        curl -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
-                            -d chat_id=${env.CHAT_ID} \
-                            -d text="Se ha ejecutado la pipeline de Jenkins con los siguientes resultados:\n
-                            Linter_stage: ${LINTER_RESULT}\n
-                            Test_stage: ${TEST_RESULT}\n
-                            Update_readme_stage: ${UPDATE_README_RESULT}\n
-                            Deploy_to_Vercel_stage: ${DEPLOY_RESULT}"
-                        """
-                        NOTIFY_RESULT = 'SUCCESS'
-                    } catch (Exception e) {
-                        NOTIFY_RESULT = 'FAILURE'
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        try {
+                            sh """
+                            curl -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
+                                -d chat_id=${env.CHAT_ID} \
+                                -d text="Se ha ejecutado la pipeline de Jenkins con los siguientes resultados:\n
+                                Linter_stage: ${LINTER_RESULT}\n
+                                Test_stage: ${TEST_RESULT}\n
+                                Update_readme_stage: ${UPDATE_README_RESULT}\n
+                                Deploy_to_Vercel_stage: ${DEPLOY_RESULT}"
+                            """
+                            NOTIFY_RESULT = 'SUCCESS'
+                        } catch (Exception e) {
+                            NOTIFY_RESULT = 'FAILURE'
+                        }
                     }
                 }
             }
