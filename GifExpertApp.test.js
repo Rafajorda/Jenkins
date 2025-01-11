@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { GifExpertApp } from './src/GifExpertApp';
 
+jest.mock('node-fetch', () => jest.fn());
 describe('GifExpertApp Component', () => {
   test('should render the GifExpertApp title', () => {
     render(<GifExpertApp />);
