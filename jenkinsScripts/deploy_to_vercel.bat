@@ -4,4 +4,4 @@ REM Verificar si el token de Vercel está presente
 echo Token de Vercel: %VERCEL_TOKEN%
 
 REM Intentar hacer el deploy a Vercel
-npx vercel --prod --token %VERCEL_TOKEN% --yes
+npx vercel --prod --token %VERCEL_TOKEN% --yes --name jenkins
