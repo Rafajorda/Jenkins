@@ -147,7 +147,6 @@ pipeline {
                         try {
                             echo "Verificando versión de Node.js en Jenkins..."
                             bat 'node -v'
-
                             echo "Verificando versión de npm en Jenkins..."
                             bat 'npm -v' 
                             echo "path"
@@ -171,7 +170,6 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
                             echo "Enviando mensaje a Telegram..."
-                            echo "linter  ${LINTER_RESULT}"
                             bat """
                             curl -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage ^
                                 -d chat_id=${env.CHAT_ID} ^
