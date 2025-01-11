@@ -6,5 +6,11 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['node-fetch', 'stream', 'buffer', 'util', 'http', 'https', 'zlib']
-  }
+  },
+  build: {
+    rollupOptions: {
+      external: ['node-fetch', 'stream', 'buffer', 'url', 'util'],
+    },
+  },
+
 })

@@ -134,6 +134,7 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
                             bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/deploy_to_vercel.sh'
+                            bat 'vercel --version'
                             DEPLOY_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             DEPLOY_RESULT = 'FAILURE'
