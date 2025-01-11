@@ -171,14 +171,11 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
                             echo "Enviando mensaje a Telegram..."
+                            echo "linter  ${LINTER_RESULT}"
                             bat """
                             curl -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage ^
                                 -d chat_id=${env.CHAT_ID} ^
-                                -d text="Se ha ejecutado la pipeline de Jenkins con los siguientes resultados:%0A%0A
-                                Linter_stage: ${LINTER_RESULT}%0A
-                                Test_stage: ${TEST_RESULT}%0A
-                                Update_readme_stage: ${UPDATE_README_RESULT}%0A
-                                Deploy_to_Vercel_stage: ${DEPLOY_RESULT}"
+                                -d text="Se ha ejecutado la pipeline de Jenkins con los siguientes resultados: Linter_stage: ${LINTER_RESULT} Test_stage: ${TEST_RESULT} Update_readme_stage: ${UPDATE_README_RESULT} Deploy_to_Vercel_stage: ${DEPLOY_RESULT}"
                             """
                             NOTIFY_RESULT = 'SUCCESS'
                         } catch (Exception e) {
