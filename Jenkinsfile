@@ -125,19 +125,19 @@ pipeline {
             }
         }
 
-        stage('Push de cambios') {
-            steps {
-                script {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        try {
-                            bat 'jenkinsScripts/push_changes.bat'
-                        } catch (Exception e) {
-                            error("El push falló")
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Push de cambios') {
+        //     steps {
+        //         script {
+        //             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        //                 try {
+        //                     bat 'jenkinsScripts/push_changes.bat'
+        //                 } catch (Exception e) {
+        //                     error("El push falló")
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Deploy a Vercel') {
             steps {
