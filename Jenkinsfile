@@ -103,7 +103,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            bat 'bash jenkinsScripts/update_readme.sh'
+                            bat '"C:\\Program Files\\Git\\git-bash.exe" jenkinsScripts/update_readme.sh'
                             UPDATE_README_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             UPDATE_README_RESULT = 'FAILURE'
@@ -119,7 +119,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            bat 'bash jenkinsScripts/push_changes.sh'
+                            bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/push_changes.sh'
                         } catch (Exception e) {
                             error("El push falló")
                         }
@@ -133,7 +133,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            bat 'bash jenkinsScripts/deploy_to_vercel.sh'
+                            bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/deploy_to_vercel.sh'
                             DEPLOY_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             DEPLOY_RESULT = 'FAILURE'
