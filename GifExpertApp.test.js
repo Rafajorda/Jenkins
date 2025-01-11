@@ -1,14 +1,15 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { GifExpertApp } from './src/GifExpertApp';
+import '@testing-library/jest-dom';
 import fetch from 'node-fetch';
+import { act } from 'react';
 
 // Mock de fetch
 jest.mock('node-fetch', () => jest.fn());
 
 describe('GifExpertApp Component', () => {
   beforeEach(() => {
-    // Configurar el mock de fetch
     fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue({
         data: [
@@ -29,18 +30,22 @@ describe('GifExpertApp Component', () => {
     expect(screen.getByText('GifExpertApp')).toBeInTheDocument();
   });
 
-  test('should add a new category when onAddCategory is called', () => {
+  test('should add a new category when onAddCategory is called', async () => {
     render(<GifExpertApp />);
-    
-    // Acceder al input y simular la escritura
+  
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'React' } });
-    
-    // Simular el submit
+  
     const form = screen.getByRole('form');
-    fireEvent.submit(form);
-    
-    // Verificar que la categoría ha sido añadida
-    expect(screen.getByText('React')).toBeInTheDocument();
+  
+    // Asegúrate de envolver la interacción asincrónica dentro de `act()`
+    await act(async () => {
+      fireEvent.submit(form);
+    });
+
+    // Espera a que la categoría 'React' se haya agregado y se muestre
+    await waitFor(() => {
+      expect(screen.getByText('React')).toBeInTheDocument();
+    });
   });
 });
