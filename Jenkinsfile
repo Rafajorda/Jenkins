@@ -6,6 +6,9 @@ pipeline {
         UPDATE_README_RESULT = ''
         DEPLOY_RESULT = ''
         NOTIFY_RESULT = ''
+        VERCEL_TOKEN = credentials('VERCEL_TOKEN')
+            
+
     }
 
     stages {
@@ -151,12 +154,12 @@ pipeline {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
                             bat """
-                            curl -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
-                                -d chat_id=${env.CHAT_ID} \
-                                -d text="Se ha ejecutado la pipeline de Jenkins con los siguientes resultados:\n
-                                Linter_stage: ${LINTER_RESULT}\n
-                                Test_stage: ${TEST_RESULT}\n
-                                Update_readme_stage: ${UPDATE_README_RESULT}\n
+                            curl -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage ^
+                                -d chat_id=${env.CHAT_ID} ^
+                                -d text="Se ha ejecutado la pipeline de Jenkins con los siguientes resultados: ^ 
+                                Linter_stage: ${LINTER_RESULT} ^ 
+                                Test_stage: ${TEST_RESULT} ^ 
+                                Update_readme_stage: ${UPDATE_README_RESULT} ^ 
                                 Deploy_to_Vercel_stage: ${DEPLOY_RESULT}"
                             """
                             NOTIFY_RESULT = 'SUCCESS'
