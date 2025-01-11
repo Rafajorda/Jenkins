@@ -7,6 +7,7 @@ pipeline {
         DEPLOY_RESULT = ''
         NOTIFY_RESULT = ''
         VERCEL_TOKEN = credentials('VERCEL_TOKEN')
+        TELEGRAM_BOT_TOKEN =credentials('TELEGRAM_BOT_TOKEN')
             
 
     }
@@ -167,7 +168,7 @@ pipeline {
                         try {
                             echo "Enviando mensaje a Telegram..."
                             echo "ID: ${env.CHAT_ID}"
-                            echo "BOT TOKEN: ${env.TELEGRAM_BOT_TOKEN}"
+                            echo "BOT TOKEN: ${TELEGRAM_BOT_TOKEN}"
                             bat """
                             curl -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage ^
                                 -d chat_id=${env.CHAT_ID} ^
