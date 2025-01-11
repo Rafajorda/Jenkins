@@ -136,6 +136,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
+                            bat 'npm install -g vercel'
                             bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/deploy_to_vercel.sh'
                             bat 'vercel --version'
                             DEPLOY_RESULT = 'SUCCESS'
