@@ -153,7 +153,7 @@ pipeline {
                             echo "path"
                             bat 'echo %PATH%' 
                             echo "npm bin"
-                            bat 'npm bin -g'                         
+                            bat 'npm prefix -g'                         
                             bat 'jenkinsScripts/deploy_to_vercel.bat'
                             DEPLOY_RESULT = 'SUCCESS'
                         } catch (Exception e) {
