@@ -1,5 +1,5 @@
 @echo off
-
+npm install -g vercel
 REM Verificar si el token de Vercel está presente
 echo Token de Vercel: %VERCEL_TOKEN%
 
