@@ -106,7 +106,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            bat '"C:\\Program Files\\Git\\git-bash.exe" jenkinsScripts/update_readme.sh'
+                            bat 'jenkinsScripts/update_readme.bat'
                             UPDATE_README_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             UPDATE_README_RESULT = 'FAILURE'
@@ -122,7 +122,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         try {
-                            bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/push_changes.sh'
+                            bat 'jenkinsScripts/push_changes.bat'
                         } catch (Exception e) {
                             error("El push falló")
                         }
@@ -141,7 +141,7 @@ pipeline {
 
                             echo "Verificando versión de npm en Jenkins..."
                             bat 'npm -v'                           
-                            bat '"C:\\Program Files\\Git\\git-bash.exe"  jenkinsScripts/deploy_to_vercel.sh'
+                            bat 'jenkinsScripts/deploy_to_vercel.bat'
                             DEPLOY_RESULT = 'SUCCESS'
                         } catch (Exception e) {
                             DEPLOY_RESULT = 'FAILURE'
@@ -159,7 +159,7 @@ pipeline {
                         try {
                             echo "Enviando mensaje a Telegram..."
                             echo "ID: ${env.CHAT_ID}"
-                            echo "BOT TOKEN: ${TELEGRAM_BOT_TOKEN}"
+                            echo "BOT TOKEN: ${env.TELEGRAM_BOT_TOKEN}"
                             bat """
                             curl -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage ^
                                 -d chat_id=${env.CHAT_ID} ^
