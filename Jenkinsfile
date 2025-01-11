@@ -100,6 +100,14 @@ pipeline {
                 }
             }
         }
+        stage('Configuración de Git') {
+            steps {
+                script {
+                    bat 'git config --global user.name "Rafajorda"'
+                    bat 'git config --global user.email "rafajorgis@gmail.com"'
+                }
+            }
+        }
 
         stage('Actualizar Readme') {
             steps {

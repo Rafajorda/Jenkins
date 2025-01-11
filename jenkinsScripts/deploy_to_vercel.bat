@@ -1,11 +1,10 @@
-#!/bin/bash
-echo "Ejecutando deploy a Vercel..."
+@echo off
 
-# Verificar si el token está presente
-echo "Token de Vercel: $VERCEL_TOKEN"
+REM Verificar si el token de Vercel está presente
+echo Token de Vercel: %VERCEL_TOKEN%
 
-# Intentar hacer el deploy a Vercel
-vercel --prod --token $VERCEL_TOKEN
+REM Intentar hacer el deploy a Vercel
+vercel --prod --token %VERCEL_TOKEN%
 
-# Confirmar la versión de Vercel después del deploy
-echo "Vercel version: $(vercel --version)"
+REM Confirmar la versión de Vercel después del deploy
+vercel --version
